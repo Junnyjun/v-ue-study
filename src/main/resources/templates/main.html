@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script th:src="@{//cdn.jsdelivr.net/npm/vue@2.6.0}" type="text/javascript"></script>
+    <script th:src="@{//unpkg.com/axios/dist/axios.min.js}" type="text/javascript"></script>
+    <script th:src="@{//cdn.jsdelivr.net/npm/vue@2.6.0}" type="text/javascript"></script>
+</head>
+<body>
+<div id="app">
+    <h2>GET TEST</h2>
+    <input type="text" v-model="data1" placeholder="data1">
+    <input type="number" v-model="data2" placeholder="data2">
+    <input type="text" v-model="data3" placeholder="data3">
+    <button type="button" @click="get1()">조회</button>
+
+    <table>
+        <thead>
+        <tr>
+            <th>data 1</th>
+            <th>data 2</th>
+            <th>data 3</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(item, idx) in result">
+            <td>{{ item.data1}}</td>
+            <td>{{ item.data2}}</td>
+            <td>{{ item.data3}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form>
+        <h2>POST TEST</h2>
+        <input type="text" v-model="post1" placeholder="post1">
+        <input type="number" v-model="post2" placeholder="post2">
+        <input type="text" v-model="post3" placeholder="post3">
+        <button type="button" @click="post()">값</button>
+    </form>
+</div>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            data1: '',
+            data2: '',
+            data3: '',
+            result: {},
+            post1: '',
+            post2: '',
+            post3: '',
+        },
+        methods: {
+            get1: function () {
+                let url = '/api/get?data1=' + this.data1 + '&data2=' + this.data2 + '&data3=2022-07-20';
+
+                axios.get(url)
+                    .then(res => {
+                        this.callback(res);
+                    }).catch(err => {
+                    let response = err.response;
+                    alert(response.data.message);
+                });
+            },
+            post: function () {
+                let url = '/api/post'
+
+                let request = {
+                    'data1': this.post1,
+                    'data2': this.post2,
+                    'data3': '2022-08-04'
+                }
+
+                axios.post(url, request)
+                    .then(res => {
+                        this.callback2(res);
+                    }).catch(err => {
+                    let response = err.response;
+                    alert(response.data.message);
+                });
+            },
+            callback: function (res) {
+                this.result = res.data.body
+                console.log(res)
+            },
+            callback2: function (res) {
+                alert(res.data.message)
+            }
+        }
+    });
+
+</script>
+</body>
+</html>
